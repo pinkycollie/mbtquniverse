@@ -1,0 +1,54 @@
+name: Deploy App (Multi-Cloud Options)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test
+      - run: npx prisma migrate deploy
+
+      # Choose your deploy target by setting DEPLOY_TARGET env (manually or via workflow inputs)
+
+      - name: Deploy to Vercel
+        if: env.DEPLOY_TARGET == 'vercel'
+        run: npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy to Netlify
+        if: env.DEPLOY_TARGET == 'netlify'
+        run: npx netlify deploy --prod --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
+
+      - name: Deploy to Cloudflare Workers
+        if: env.DEPLOY_TARGET == 'cloudflare'
+        run: npx wrangler publish
+
+      - name: Deploy to Heroku
+        if: env.DEPLOY_TARGET == 'heroku'
+        run: git push https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git main
+
+      - name: Deploy Docker Image
+        if: env.DEPLOY_TARGET == 'docker'
+        run: |
+          docker build -t my-app .
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+          docker push my-app:latest
+
+      - name: Deploy to GitHub Pages
+        if: env.DEPLOY_TARGET == 'gh-pages'
+        run: npx gh-pages -d build
+
+      - name: Deploy to Nginx Server (via SSH/rsync)
+        if: env.DEPLOY_TARGET == 'nginx'
+        run: |
+          rsync -avz --delete ./dist/ ${{ secrets.NGINX_USER }}@${{ secrets.NGINX_HOST }}:${{ secrets.NGINX_DEPLOY_PATH }}
+          ssh ${{ secrets.NGINX_USER }}@${{ secrets.NGINX_HOST }} "sudo systemctl reload nginx"
