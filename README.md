@@ -398,7 +398,19 @@ For detailed information, see the [Release Guide](docs/RELEASE_GUIDE.md).
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read our contributing guidelines before submitting pull requests.
+Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting pull requests.
+
+### Quick Contribution Guide
+
+1. Fork the repository
+2. Create a feature branch (`feat/your-feature`)
+3. Make your changes
+4. Run tests and linting
+5. Commit using [Conventional Commits](https://www.conventionalcommits.org/)
+6. Push to your fork
+7. Create a Pull Request
+
+For detailed information, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## 📄 License
 
