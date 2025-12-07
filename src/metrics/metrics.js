@@ -304,7 +304,7 @@ export class MetricsManager {
   }
 
   _generateId() {
-    return `MET-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `MET-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
   }
 }
 

@@ -127,8 +127,8 @@ export class APIGateway {
     return {
       totalRequests: this.requestLog.length,
       recentRequests: recentLogs.length,
-      successRate: recentLogs.filter(log => log.status === 'success').length / recentLogs.length,
-      errorRate: recentLogs.filter(log => log.status === 'error').length / recentLogs.length,
+      successRate: recentLogs.length > 0 ? recentLogs.filter(log => log.status === 'success').length / recentLogs.length : 0,
+      errorRate: recentLogs.length > 0 ? recentLogs.filter(log => log.status === 'error').length / recentLogs.length : 0,
       moduleUsage: this._getModuleUsage(recentLogs)
     };
   }
@@ -164,7 +164,7 @@ export class APIGateway {
   }
 
   _generateRequestId() {
-    return `REQ-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `REQ-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
   }
 }
 

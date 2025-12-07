@@ -309,7 +309,7 @@ export class DAOGovernance {
 
   // Private helper methods
   _generateId() {
-    return `PROP-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `PROP-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
   }
 }
 

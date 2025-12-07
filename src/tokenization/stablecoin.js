@@ -235,7 +235,7 @@ export class StablecoinManager {
 
   // Private helper methods
   _generateId() {
-    return `SC-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `SC-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
   }
 
   _verifyAuthorization(authorization) {
@@ -245,7 +245,7 @@ export class StablecoinManager {
   }
 
   _recordTransaction(transaction) {
-    transaction.id = `TX-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    transaction.id = `TX-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
     this.transactions.push(transaction);
   }
 
