@@ -1,8 +1,6 @@
 name: Deploy
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
     inputs:
       deploy_target:
@@ -80,12 +78,13 @@ jobs:
           retention-days: 7
 
   deploy:
-    name: Deploy to ${{ inputs.deploy_target || 'default' }}
+    name: Deploy to ${{ inputs.deploy_target }}
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    if: github.event_name == 'workflow_dispatch'
     environment:
-      name: ${{ inputs.environment || 'production' }}
+      name: ${{ inputs.environment }}
+      url: ${{ steps.deployment.outputs.url }}
       
     steps:
       - name: Checkout code
@@ -99,25 +98,25 @@ jobs:
         continue-on-error: true
 
       - name: Deploy to Vercel
-        if: inputs.deploy_target == 'vercel' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'vercel')
+        if: inputs.deploy_target == 'vercel'
         run: npx vercel@latest --prod --token ${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Deploy to Netlify
-        if: inputs.deploy_target == 'netlify' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'netlify')
+        if: inputs.deploy_target == 'netlify'
         run: npx netlify-cli@latest deploy --prod --site ${{ secrets.NETLIFY_SITE_ID }} --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Deploy to Cloudflare Workers
-        if: inputs.deploy_target == 'cloudflare' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'cloudflare')
+        if: inputs.deploy_target == 'cloudflare'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Deploy to Heroku
-        if: inputs.deploy_target == 'heroku' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'heroku')
+        if: inputs.deploy_target == 'heroku'
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
@@ -125,18 +124,18 @@ jobs:
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
 
       - name: Set up Docker Buildx
-        if: inputs.deploy_target == 'docker' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'docker')
+        if: inputs.deploy_target == 'docker'
         uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
-        if: inputs.deploy_target == 'docker' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'docker')
+        if: inputs.deploy_target == 'docker'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker image
-        if: inputs.deploy_target == 'docker' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'docker')
+        if: inputs.deploy_target == 'docker'
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -148,7 +147,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Deploy to GitHub Pages
-        if: inputs.deploy_target == 'gh-pages' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'gh-pages')
+        if: inputs.deploy_target == 'gh-pages'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -156,13 +155,13 @@ jobs:
           cname: ${{ vars.CUSTOM_DOMAIN }}
 
       - name: Setup SSH for Nginx deployment
-        if: inputs.deploy_target == 'nginx' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'nginx')
+        if: inputs.deploy_target == 'nginx'
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Deploy to Nginx Server
-        if: inputs.deploy_target == 'nginx' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'nginx')
+        if: inputs.deploy_target == 'nginx'
         run: |
           rsync -avz --delete ./dist/ ${{ secrets.NGINX_USER }}@${{ secrets.NGINX_HOST }}:${{ secrets.NGINX_DEPLOY_PATH }}
           ssh ${{ secrets.NGINX_USER }}@${{ secrets.NGINX_HOST }} "sudo systemctl reload nginx"
