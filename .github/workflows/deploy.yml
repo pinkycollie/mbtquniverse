@@ -100,14 +100,14 @@ jobs:
 
       - name: Deploy to Vercel
         if: inputs.deploy_target == 'vercel' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'vercel')
-        run: npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+        run: npx vercel@latest --prod --token ${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Deploy to Netlify
         if: inputs.deploy_target == 'netlify' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'netlify')
-        run: npx netlify deploy --prod --site ${{ secrets.NETLIFY_SITE_ID }} --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: npx netlify-cli@latest deploy --prod --site ${{ secrets.NETLIFY_SITE_ID }} --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Deploy to Cloudflare Workers
         if: inputs.deploy_target == 'cloudflare' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'cloudflare')
