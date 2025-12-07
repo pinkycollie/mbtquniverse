@@ -1,12 +1,6 @@
 name: Release Management
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
-      - 'v*.*.*-alpha*'
-      - 'v*.*.*-beta*'
-      - 'v*.*.*-rc*'
   workflow_dispatch:
     inputs:
       version:
@@ -38,14 +32,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Extract version from tag or input
+      - name: Extract version from input
         id: extract
         run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            VERSION="${{ inputs.version }}"
-          else
-            VERSION="${GITHUB_REF#refs/tags/}"
-          fi
+          VERSION="${{ inputs.version }}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Extracted version: $VERSION"
 
