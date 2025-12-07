@@ -85,10 +85,21 @@ console.log(`📦 Current version: ${currentVersion}`);
 // Calculate new version
 let newVersion;
 try {
-  const versionParts = currentVersion.split(/[.-]/);
-  let major = parseInt(versionParts[0]);
-  let minor = parseInt(versionParts[1]);
-  let patch = parseInt(versionParts[2]);
+  // Split only on the first dot to preserve pre-release identifiers
+  // E.g., "1.0.0-alpha.1" -> ["1", "0", "0-alpha.1"]
+  const versionMatch = currentVersion.match(/^(\d+)\.(\d+)\.(\d+)/);
+  if (!versionMatch) {
+    throw new Error('Invalid version format');
+  }
+  
+  let major = parseInt(versionMatch[1], 10);
+  let minor = parseInt(versionMatch[2], 10);
+  let patch = parseInt(versionMatch[3], 10);
+  
+  // Validate that we got valid numbers
+  if (isNaN(major) || isNaN(minor) || isNaN(patch)) {
+    throw new Error('Version contains non-numeric parts');
+  }
 
   switch (bumpType) {
     case 'major':
@@ -143,30 +154,11 @@ try {
 }
 
 // Update CHANGELOG.md
-const changelogPath = join(rootDir, 'CHANGELOG.md');
-const date = new Date().toISOString().split('T')[0];
-
 try {
-  let changelog = readFileSync(changelogPath, 'utf8');
-  
-  const newEntry = `
-## [v${newVersion}] - ${date}
-
-### Added
-- Version bump to v${newVersion}
-
-### Changed
-- See commit history for detailed changes
-
-`;
-
-  // Insert after the [Unreleased] section
-  changelog = changelog.replace(
-    /## \[Unreleased\]\n/,
-    `## [Unreleased]\n${newEntry}`
-  );
-
-  writeFileSync(changelogPath, changelog);
+  const { execSync } = await import('child_process');
+  execSync(`node ${join(rootDir, 'scripts', 'update-changelog.js')} ${newVersion}`, { 
+    stdio: 'inherit' 
+  });
   console.log('✅ Updated CHANGELOG.md');
 } catch (error) {
   console.warn('⚠️  Warning: Could not update CHANGELOG.md');

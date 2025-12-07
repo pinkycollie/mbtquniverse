@@ -117,29 +117,9 @@ jobs:
       - name: Update CHANGELOG
         run: |
           NEW_VERSION="${{ steps.new_version.outputs.version }}"
-          DATE=$(date +%Y-%m-%d)
           
-          if [ ! -f CHANGELOG.md ]; then
-            echo "# Changelog" > CHANGELOG.md
-            echo "" >> CHANGELOG.md
-            echo "All notable changes to this project will be documented in this file." >> CHANGELOG.md
-            echo "" >> CHANGELOG.md
-            echo "The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)," >> CHANGELOG.md
-            echo "and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)." >> CHANGELOG.md
-            echo "" >> CHANGELOG.md
-          fi
-          
-          # Insert new version section after the header
-          sed -i "/^# Changelog/a\\
-          \\
-          ## [v$NEW_VERSION] - $DATE\\
-          \\
-          ### Added\\
-          - Version bump to v$NEW_VERSION\\
-          \\
-          ### Changed\\
-          - See commit history for detailed changes\\
-          " CHANGELOG.md
+          # Use the changelog update script
+          node scripts/update-changelog.js "$NEW_VERSION"
 
       - name: Commit changes
         run: |
