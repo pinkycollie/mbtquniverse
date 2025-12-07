@@ -1,0 +1,130 @@
+# GitHub Labels Configuration for MBTQUniverse
+# This file defines labels for issues, pull requests, and releases
+
+# Release-related labels
+- name: "release"
+  color: "0e8a16"
+  description: "Release-related issues and PRs"
+
+- name: "version-bump"
+  color: "1d76db"
+  description: "Automatic version bump"
+
+- name: "changelog"
+  color: "fbca04"
+  description: "Requires changelog update"
+
+- name: "breaking-change"
+  color: "d93f0b"
+  description: "Introduces breaking changes"
+
+# Version type labels
+- name: "major"
+  color: "d93f0b"
+  description: "Major version change (breaking)"
+
+- name: "minor"
+  color: "fbca04"
+  description: "Minor version change (new features)"
+
+- name: "patch"
+  color: "0e8a16"
+  description: "Patch version change (bug fixes)"
+
+# Pre-release labels
+- name: "alpha"
+  color: "e99695"
+  description: "Alpha pre-release"
+
+- name: "beta"
+  color: "f9d0c4"
+  description: "Beta pre-release"
+
+- name: "rc"
+  color: "fef2c0"
+  description: "Release candidate"
+
+# Branch-related labels
+- name: "main"
+  color: "0052cc"
+  description: "Related to main branch"
+
+- name: "master"
+  color: "0052cc"
+  description: "Related to master branch"
+
+- name: "feature"
+  color: "a2eeef"
+  description: "New feature branch"
+
+- name: "hotfix"
+  color: "d93f0b"
+  description: "Urgent hotfix"
+
+# Workflow labels
+- name: "automated"
+  color: "ededed"
+  description: "Automated by GitHub Actions"
+
+- name: "needs-review"
+  color: "fbca04"
+  description: "Awaiting review"
+
+- name: "approved"
+  color: "0e8a16"
+  description: "Approved and ready to merge"
+
+# Type labels
+- name: "bug"
+  color: "d73a4a"
+  description: "Something isn't working"
+
+- name: "enhancement"
+  color: "a2eeef"
+  description: "New feature or request"
+
+- name: "documentation"
+  color: "0075ca"
+  description: "Documentation improvements"
+
+- name: "dependencies"
+  color: "0366d6"
+  description: "Dependency updates"
+
+- name: "security"
+  color: "d73a4a"
+  description: "Security-related changes"
+
+# Priority labels
+- name: "priority: critical"
+  color: "d93f0b"
+  description: "Critical priority"
+
+- name: "priority: high"
+  color: "fbca04"
+  description: "High priority"
+
+- name: "priority: medium"
+  color: "0e8a16"
+  description: "Medium priority"
+
+- name: "priority: low"
+  color: "d4c5f9"
+  description: "Low priority"
+
+# Status labels
+- name: "in-progress"
+  color: "fbca04"
+  description: "Work in progress"
+
+- name: "blocked"
+  color: "d93f0b"
+  description: "Blocked by other work"
+
+- name: "on-hold"
+  color: "fef2c0"
+  description: "Temporarily on hold"
+
+- name: "ready-for-release"
+  color: "0e8a16"
+  description: "Ready to be released"
