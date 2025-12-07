@@ -1,0 +1,28 @@
+{
+  "name": "mbtquniverse",
+  "version": "1.0.0",
+  "description": "A decentralized showcase and orchestration layer for DAO governance, agent/project registration, staking, metrics, and tokenization systems",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "lint": "echo 'Linting...' && exit 0",
+    "test": "node --test src/**/*.test.js",
+    "db:migrate": "node src/database/migrate.js"
+  },
+  "keywords": [
+    "dao",
+    "governance",
+    "tokenization",
+    "stablecoin",
+    "blockchain",
+    "decentralized",
+    "registry",
+    "staking"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}
