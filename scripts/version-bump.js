@@ -155,7 +155,6 @@ try {
 
 // Update CHANGELOG.md
 try {
-  const { execSync } = await import('child_process');
   execSync(`node ${join(rootDir, 'scripts', 'update-changelog.js')} ${newVersion}`, { 
     stdio: 'inherit' 
   });
