@@ -1,0 +1,382 @@
+# MBTQUniverse .gitignore
+# Files that should not be visible to anyone but internal workspace
+
+# ============================================
+# Sensitive & Private Files
+# ============================================
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+.env.test
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+config/secrets/
+private/
+.secrets
+
+# Credentials and authentication
+credentials.json
+auth.json
+service-account.json
+*.credentials
+.aws/
+.gcp/
+.azure/
+
+# API keys and tokens
+.api-keys
+api-keys.json
+tokens.json
+*.token
+
+# Database credentials
+database.config.js
+db.config.js
+connection-strings.txt
+
+# Private keys and certificates
+*.crt
+*.cert
+*.cer
+*.der
+ssl/
+certs/private/
+
+# ============================================
+# Node.js / JavaScript
+# ============================================
+
+# Dependencies
+node_modules/
+jspm_packages/
+bower_components/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.yarn/
+.pnp.*
+
+# Test coverage
+coverage/
+.nyc_output/
+*.lcov
+.coverage/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# ============================================
+# Database Files
+# ============================================
+
+# SQLite
+*.sqlite
+*.sqlite3
+*.db
+*.db3
+
+# Database dumps
+*.sql
+*.dump
+backups/
+db-backup/
+
+# Prisma
+prisma/*.db
+prisma/migrations/dev.db
+
+# ============================================
+# Operating System Files
+# ============================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+.Trash-*/
+
+# ============================================
+# IDEs and Editors
+# ============================================
+
+# VS Code
+.vscode/
+*.code-workspace
+.history/
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.*.sw?
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ============================================
+# Temporary and Cache Files
+# ============================================
+
+# General temp files
+tmp/
+temp/
+*.tmp
+*.temp
+.temp/
+.tmp/
+
+# Cache directories
+.cache/
+.eslintcache
+.stylelintcache
+*.cache
+
+# ============================================
+# Build and Deployment
+# ============================================
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+.docker/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+terraform.tfvars
+
+# Kubernetes
+*.kubeconfig
+k8s-secrets/
+
+# Deployment artifacts
+deploy/
+releases/
+
+# ============================================
+# Testing and Development
+# ============================================
+
+# Test files (if sensitive)
+test-data/
+fixtures/private/
+*.test.local.js
+
+# Development databases
+dev.db
+development.sqlite
+
+# Debug files
+debug.log
+trace.log
+
+# ============================================
+# Documentation (Private)
+# ============================================
+
+# Private notes and planning
+NOTES.md
+TODO.private.md
+PLANNING.private.md
+STRATEGY.md
+notes/
+planning/private/
+
+# Internal documentation
+docs/internal/
+docs/private/
+internal-docs/
+
+# ============================================
+# Financial and Legal
+# ============================================
+
+# Financial records
+invoices/
+receipts/
+financial/
+accounting/
+
+# Legal documents
+legal/
+contracts/
+agreements/
+
+# Compliance records
+compliance/private/
+audit/private/
+
+# ============================================
+# Backup Files
+# ============================================
+
+*.backup
+*.bak
+*.old
+backup/
+backups/
+*-backup/
+
+# ============================================
+# Analytics and Monitoring (Private)
+# ============================================
+
+# Private analytics
+analytics/private/
+metrics/private/
+reports/private/
+
+# Monitoring credentials
+monitoring.config
+datadog.config
+newrelic.config
+
+# ============================================
+# User Data and Privacy
+# ============================================
+
+# User data (development/test)
+user-data/
+customer-data/
+pii/
+
+# Email lists
+emails.txt
+email-list.csv
+subscribers/
+
+# ============================================
+# Custom Application Files
+# ============================================
+
+# MBTQUniverse specific
+src/database/*.db
+src/database/data/
+data/
+*.local.js
+config/*.local.*
+
+# Private modules
+src/private/
+modules/private/
+
+# Internal scripts
+scripts/internal/
+scripts/private/
+
+# ============================================
+# Miscellaneous
+# ============================================
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# Large files
+*.iso
+*.dmg
+*.pkg
+
+# OS generated
+.fseventsd
+.Spotlight-V100
+
+# NPM
+.npm
+.node_repl_history
+
+# Optional npm cache directory
+.npm/
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# ============================================
+# Keep Empty Directories (with .gitkeep)
+# ============================================
+!.gitkeep

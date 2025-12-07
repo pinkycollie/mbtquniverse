@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json.schemastore.org/release.json",
+  "name": "mbtquniverse",
+  "version": "1.0.0",
+  "description": "Release configuration for MBTQUniverse",
+  
+  "versioning": {
+    "scheme": "semver",
+    "tagPrefix": "v",
+    "tagFormat": "v{version}",
+    "bumpStrategy": "semantic"
+  },
+
+  "branches": {
+    "main": {
+      "name": "main",
+      "prerelease": false,
+      "channel": "latest"
+    },
+    "master": {
+      "name": "master",
+      "prerelease": false,
+      "channel": "latest"
+    },
+    "develop": {
+      "name": "develop",
+      "prerelease": "beta",
+      "channel": "beta"
+    },
+    "next": {
+      "name": "next",
+      "prerelease": "alpha",
+      "channel": "alpha"
+    }
+  },
+
+  "featureBranches": [
+    {
+      "pattern": "feat/*",
+      "prerelease": "alpha"
+    },
+    {
+      "pattern": "feat:*",
+      "prerelease": "alpha"
+    },
+    {
+      "pattern": "feature/*",
+      "prerelease": "alpha"
+    }
+  ],
+
+  "releaseBranches": [
+    {
+      "pattern": "release/*",
+      "prerelease": "rc"
+    }
+  ],
+
+  "hotfixBranches": [
+    {
+      "pattern": "hotfix/*",
+      "prerelease": false,
+      "channel": "latest"
+    }
+  ],
+
+  "prerelease": {
+    "alpha": {
+      "description": "Alpha pre-release for early testing",
+      "stability": "unstable",
+      "tagFormat": "v{version}-alpha.{increment}"
+    },
+    "beta": {
+      "description": "Beta pre-release for feature testing",
+      "stability": "testing",
+      "tagFormat": "v{version}-beta.{increment}"
+    },
+    "rc": {
+      "description": "Release candidate for final testing",
+      "stability": "stable",
+      "tagFormat": "v{version}-rc.{increment}"
+    }
+  },
+
+  "changelog": {
+    "enabled": true,
+    "file": "CHANGELOG.md",
+    "format": "keepachangelog",
+    "sections": [
+      {
+        "type": "feat",
+        "section": "🎉 New Features",
+        "hidden": false
+      },
+      {
+        "type": "fix",
+        "section": "🐛 Bug Fixes",
+        "hidden": false
+      },
+      {
+        "type": "perf",
+        "section": "⚡ Performance Improvements",
+        "hidden": false
+      },
+      {
+        "type": "refactor",
+        "section": "♻️ Code Refactoring",
+        "hidden": false
+      },
+      {
+        "type": "docs",
+        "section": "📚 Documentation",
+        "hidden": false
+      },
+      {
+        "type": "style",
+        "section": "🎨 Styles",
+        "hidden": false
+      },
+      {
+        "type": "test",
+        "section": "🧪 Tests",
+        "hidden": false
+      },
+      {
+        "type": "build",
+        "section": "🔧 Build System",
+        "hidden": false
+      },
+      {
+        "type": "ci",
+        "section": "👷 CI/CD",
+        "hidden": false
+      },
+      {
+        "type": "chore",
+        "section": "🔨 Maintenance",
+        "hidden": false
+      },
+      {
+        "type": "breaking",
+        "section": "⚠️ BREAKING CHANGES",
+        "hidden": false
+      },
+      {
+        "type": "security",
+        "section": "🔒 Security",
+        "hidden": false
+      },
+      {
+        "type": "deps",
+        "section": "📦 Dependencies",
+        "hidden": false
+      }
+    ]
+  },
+
+  "release": {
+    "draft": false,
+    "prerelease": "auto",
+    "generateReleaseNotes": true,
+    "makeLatest": "auto",
+    "discussionCategory": "releases"
+  },
+
+  "commits": {
+    "conventionalCommits": true,
+    "format": {
+      "feat": "New feature",
+      "fix": "Bug fix",
+      "docs": "Documentation",
+      "style": "Code style",
+      "refactor": "Code refactoring",
+      "perf": "Performance improvement",
+      "test": "Tests",
+      "build": "Build system",
+      "ci": "CI/CD",
+      "chore": "Maintenance",
+      "revert": "Revert changes"
+    }
+  },
+
+  "automation": {
+    "autoTag": true,
+    "autoRelease": true,
+    "autoChangelog": true,
+    "versionBump": {
+      "automatic": false,
+      "requirePR": true,
+      "requireApproval": true
+    }
+  },
+
+  "validation": {
+    "requireTests": true,
+    "requireLint": true,
+    "requireBuild": true,
+    "requireDocs": false,
+    "allowSkip": false
+  },
+
+  "notifications": {
+    "enabled": false,
+    "channels": []
+  },
+
+  "assets": {
+    "include": [
+      "dist/**/*",
+      "build/**/*",
+      "README.md",
+      "LICENSE",
+      "CHANGELOG.md"
+    ],
+    "exclude": [
+      "**/*.map",
+      "**/node_modules/**",
+      "**/.DS_Store"
+    ]
+  },
+
+  "integrations": {
+    "npm": {
+      "enabled": false,
+      "registry": "https://registry.npmjs.org",
+      "access": "public"
+    },
+    "docker": {
+      "enabled": false,
+      "registry": "docker.io",
+      "namespace": ""
+    }
+  }
+}

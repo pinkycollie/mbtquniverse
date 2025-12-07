@@ -1,52 +1,166 @@
-name: Deploy App (Multi-Cloud Options)
+name: Deploy
 
 on:
   workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: 'Deployment target platform'
+        required: true
+        type: choice
+        options:
+          - vercel
+          - netlify
+          - cloudflare
+          - heroku
+          - docker
+          - gh-pages
+          - nginx
+      environment:
+        description: 'Deployment environment'
+        required: true
+        type: choice
+        options:
+          - production
+          - staging
+
+# Prevent concurrent deployments to the same environment
+concurrency:
+  group: deploy-${{ github.ref }}-${{ inputs.environment || 'production' }}
+  cancel-in-progress: false
+
+# Use least-privilege permissions
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  build-and-deploy:
+  build:
+    name: Build and Test
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run test
-      - run: npx prisma migrate deploy
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # Choose your deploy target by setting DEPLOY_TARGET env (manually or via workflow inputs)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        if: hashFiles('package.json') != ''
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+        if: hashFiles('package.json') != ''
+
+      - name: Run linter
+        run: npm run lint
+        if: hashFiles('package.json') != ''
+
+      - name: Run tests
+        run: npm test --if-present
+        if: hashFiles('package.json') != ''
+
+      - name: Build application
+        run: npm run build
+        if: hashFiles('package.json') != ''
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        if: hashFiles('package.json') != ''
+        with:
+          name: build-artifacts
+          path: |
+            dist/
+            build/
+            .next/
+          retention-days: 7
+
+  deploy:
+    name: Deploy to ${{ inputs.deploy_target || 'default' }}
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    environment:
+      name: ${{ inputs.environment || 'production' }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4.1.3
+        if: hashFiles('package.json') != ''
+        with:
+          name: build-artifacts
+        continue-on-error: true
 
       - name: Deploy to Vercel
-        if: env.DEPLOY_TARGET == 'vercel'
-        run: npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+        if: inputs.deploy_target == 'vercel' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'vercel')
+        run: npx vercel@latest --prod --token ${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Deploy to Netlify
-        if: env.DEPLOY_TARGET == 'netlify'
-        run: npx netlify deploy --prod --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        if: inputs.deploy_target == 'netlify' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'netlify')
+        run: npx netlify-cli@latest deploy --prod --site ${{ secrets.NETLIFY_SITE_ID }} --auth ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Deploy to Cloudflare Workers
-        if: env.DEPLOY_TARGET == 'cloudflare'
-        run: npx wrangler publish
+        if: inputs.deploy_target == 'cloudflare' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'cloudflare')
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Deploy to Heroku
-        if: env.DEPLOY_TARGET == 'heroku'
-        run: git push https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git main
+        if: inputs.deploy_target == 'heroku' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'heroku')
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
 
-      - name: Deploy Docker Image
-        if: env.DEPLOY_TARGET == 'docker'
-        run: |
-          docker build -t my-app .
-          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
-          docker push my-app:latest
+      - name: Set up Docker Buildx
+        if: inputs.deploy_target == 'docker' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'docker')
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        if: inputs.deploy_target == 'docker' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'docker')
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        if: inputs.deploy_target == 'docker' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'docker')
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+            ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Deploy to GitHub Pages
-        if: env.DEPLOY_TARGET == 'gh-pages'
-        run: npx gh-pages -d build
+        if: inputs.deploy_target == 'gh-pages' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'gh-pages')
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+          cname: ${{ vars.CUSTOM_DOMAIN }}
 
-      - name: Deploy to Nginx Server (via SSH/rsync)
-        if: env.DEPLOY_TARGET == 'nginx'
+      - name: Setup SSH for Nginx deployment
+        if: inputs.deploy_target == 'nginx' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'nginx')
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to Nginx Server
+        if: inputs.deploy_target == 'nginx' || (github.event_name == 'push' && vars.DEFAULT_DEPLOY_TARGET == 'nginx')
         run: |
           rsync -avz --delete ./dist/ ${{ secrets.NGINX_USER }}@${{ secrets.NGINX_HOST }}:${{ secrets.NGINX_DEPLOY_PATH }}
           ssh ${{ secrets.NGINX_USER }}@${{ secrets.NGINX_HOST }} "sudo systemctl reload nginx"
