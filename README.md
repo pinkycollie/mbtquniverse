@@ -257,6 +257,7 @@ Comprehensive documentation is available in the `docs/` directory:
 - **[Staking Guide](docs/STAKING.md)** - Staking pools and rewards
 - **[API Reference](docs/API.md)** - Complete API documentation
 - **[Architecture](docs/ARCHITECTURE.md)** - System design and patterns
+- **[Manual Deployment Guide](docs/MANUAL_DEPLOYMENT.md)** - Manual deployment process and approval workflow
 - **[Release Guide](docs/RELEASE_GUIDE.md)** - Versioning and release management
 - **[Branch Protection](docs/BRANCH_PROTECTION.md)** - Branch strategy and protection rules
 
