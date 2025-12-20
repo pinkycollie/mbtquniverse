@@ -189,7 +189,7 @@ const ActionLog = ({ events }) => {
       <h3 className="text-lg font-bold text-white mb-3">Agent Activity</h3>
       <div className="space-y-2">
         {events.map((event, idx) => {
-          const semantic = STATE_SEMANTICS[event.state];
+          const semantic = STATE_SEMANTICS[event.current];
           return (
             <div key={idx} className="flex items-start gap-3 text-sm">
               <span className={`${semantic.color} w-2 h-2 rounded-full mt-1.5 flex-shrink-0`} />
