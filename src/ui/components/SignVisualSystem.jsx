@@ -123,8 +123,10 @@ const SignerPanel = ({ state, position = 'right', size = 'medium' }) => {
         {/* Primary Visual Cue */}
         <div className={`relative ${semantic.motion === 'spin' ? 'animate-spin' : ''} 
                         ${semantic.motion === 'pulse' ? 'animate-pulse' : ''}
-                        ${semantic.motion === 'pulse-fast' ? 'animate-pulse' : ''}
-                        ${semantic.motion === 'bounce' ? 'animate-bounce' : ''}`}>
+                        ${semantic.motion === 'pulse-slow' ? 'animate-pulse-slow' : ''}
+                        ${semantic.motion === 'pulse-fast' ? 'animate-pulse-fast' : ''}
+                        ${semantic.motion === 'bounce' ? 'animate-bounce' : ''}
+                        ${semantic.motion === 'shake' ? 'animate-shake' : ''}`}>
           <Icon className={`w-32 h-32 ${semantic.color.replace('bg-', 'text-')}`} />
         </div>
 
