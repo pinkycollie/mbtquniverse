@@ -28,7 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react-dom": "^19.2.3",
     "lucide-react": "^0.263.1"
   },
   "devDependencies": {
