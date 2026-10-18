@@ -24,7 +24,7 @@
     "registry",
     "staking"
   ],
-  "author": "",
+  "author": "Pinky Collie",
   "license": "MIT",
   "dependencies": {
     "react": "^19.2.3",
